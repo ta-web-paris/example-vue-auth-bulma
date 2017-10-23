@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
@@ -19,6 +20,14 @@ const app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+if (app.get('env') === 'development') {
+  app.use(
+    cors({
+      origin: 'http://localhost:8080',
+    })
+  );
+}
 
 app.use(passport.initialize());
 // Create the strategy for JWT
@@ -48,10 +57,8 @@ const strategy = new Strategy(
 // tell pasport to use it
 passport.use(strategy);
 
-const index = require('./routes/index');
 const authRoutes = require('./routes/auth');
 
-app.use('/', index);
 app.use('/api', authRoutes);
 
 // This is an example of protected route

@@ -58,7 +58,14 @@ router.post('/login', (req, res, next) => {
         // for the client, this is just a token, he knows that
         // he has to send it
         const token = jwt.encode(payload, config.jwtSecret);
-        res.json({ token });
+        res.json({
+          user: {
+            name: user.name,
+            username: user.username,
+            _id: user._id,
+          },
+          token,
+        });
       }
     });
   } else {
