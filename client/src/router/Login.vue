@@ -32,7 +32,8 @@ export default {
   methods: {
     login () {
       login(this.username, this.password, this.$root).then(data => {
-        this.$router.push('/')
+        const redirect = decodeURIComponent(this.$route.query.redirect || '')
+        this.$router.push(redirect || '/')
       })
     },
   },

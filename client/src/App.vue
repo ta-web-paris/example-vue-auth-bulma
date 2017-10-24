@@ -16,6 +16,9 @@
 
       <div id="navMenuTransparentExample" class="navbar-menu">
         <div class="navbar-end">
+          <router-link to="/dashboard" class="navbar-item ">
+            Dashboard
+          </router-link>
           <router-link v-if="!$root.user" to="/login" class="navbar-item ">
             Login
           </router-link>
