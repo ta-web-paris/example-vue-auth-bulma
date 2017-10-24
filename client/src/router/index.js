@@ -55,9 +55,11 @@ router.beforeEach((to, from, next) => {
     // is created (hook where we call checkUser), to prevent that,
     // we call it here
     checkUser(router.app.$root);
-    if (router.app.$root.user) next();
-    else
-      next({
+    if (!router.app.$root.user) {
+      // we return because we can only call next once
+      // next with a parameter allows us to control
+      // where we redirect the user
+      return next({
         path: '/login',
         query: {
           // URL queries cannot contain specific characters
@@ -68,9 +70,12 @@ router.beforeEach((to, from, next) => {
           redirect: encodeURIComponent(to.fullPath),
         },
       });
-  } else {
-    next();
+    }
   }
+
+  // we must always call next to let the
+  // navigation happen
+  next();
 });
 
 // This one is pretty much the opposite
@@ -82,11 +87,9 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresNonAuth) {
     checkUser(router.app.$root);
-    if (router.app.$root.user) next('/');
-    else next();
-  } else {
-    next();
+    if (router.app.$root.user) return next('/');
   }
+  next();
 });
 
 export default router;
