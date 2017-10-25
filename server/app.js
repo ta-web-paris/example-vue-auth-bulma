@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -5,6 +6,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const mailgun = require('mailgun.js');
 
 const passport = require('passport');
 const User = require('./models/user');
@@ -14,6 +16,22 @@ const { Strategy, ExtractJwt } = require('passport-jwt');
 mongoose.connect('mongodb://localhost/blog-lab', { useMongoClient: true });
 
 const app = express();
+
+const mg = mailgun.client({
+  username: 'api',
+  key: process.env.MAILGUN_API_KEY,
+  public_key: process.env.MAILGUN_PUBLIC_KEY,
+});
+
+mg.messages
+  .create(process.env.MAILGUN_DOMAIN, {
+    from: 'Someone <mailgun@mailgun.org>',
+    to: ['eduardo@ironhack.com'],
+    subject: 'The time...',
+    text: `Here's the time: ${new Date().toISOString()}!`,
+  })
+  .then(msg => console.log(msg)) // logs response data
+  .catch(err => console.log(err)); // logs any error
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
