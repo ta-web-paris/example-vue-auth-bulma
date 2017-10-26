@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -58,8 +59,10 @@ const strategy = new Strategy(
 passport.use(strategy);
 
 const authRoutes = require('./routes/auth');
+const imagesRoutes = require('./routes/images');
 
 app.use('/api', authRoutes);
+app.use('/api/images', imagesRoutes);
 
 // This is an example of protected route
 app.get(
