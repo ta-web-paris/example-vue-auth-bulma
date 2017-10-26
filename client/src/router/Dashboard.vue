@@ -2,6 +2,7 @@
   <div>
     This is the dashboard
     <pre>{{ $root.user }}</pre>
+    <img :src="imgUrl" v-if="imgUrl">
     <form @submit.prevent="uploadPicture">
       <input type="file" name="picture" @change="picture = $event.target.files[0]">
       <br>
@@ -16,7 +17,8 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      picture: ''
+      picture: '',
+      imgUrl: ''
     }
   },
   methods: {
@@ -31,6 +33,7 @@ export default {
         }
       }).then(response => {
         console.log(response.data)
+        this.imgUrl = response.data.secure_url
       })
     }
   }
