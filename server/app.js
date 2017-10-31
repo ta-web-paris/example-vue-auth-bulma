@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const stripe = require('stripe')('sk_test_USEYOUROWNKEY');
 
 const passport = require('passport');
 const User = require('./models/user');
@@ -73,6 +74,23 @@ app.get(
   }
 );
 
+app.post('/api/pay', (req, res, next) => {
+  const { token } = req.body;
+  stripe.charges.create(
+    {
+      amount: 100, // 10€
+      currency: 'eur',
+      description: 'Example charge',
+      source: token.id,
+    },
+    function(err, charge) {
+      if (err) return next(err);
+      console.log(charge);
+      res.json({ charge });
+    }
+  );
+});
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
@@ -84,6 +102,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   // return the error message only in development mode
+  console.log(err);
   res.json({
     error: req.app.get('env') === 'development' ? err : {},
   });

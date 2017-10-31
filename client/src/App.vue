@@ -19,6 +19,9 @@
           <router-link to="/dashboard" class="navbar-item ">
             Dashboard
           </router-link>
+          <router-link v-if="$root.user" to="/pay-it" class="navbar-item ">
+            Pay 10€
+          </router-link>
           <router-link v-if="!$root.user" to="/login" class="navbar-item ">
             Login
           </router-link>

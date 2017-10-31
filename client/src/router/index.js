@@ -4,6 +4,7 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import Dashboard from './Dashboard';
+import PayIt from './PayIt';
 import { checkUser } from '@/api/auth';
 
 Vue.use(Router);
@@ -36,6 +37,13 @@ const router = new Router({
     {
       path: '/dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/pay-it',
+      component: PayIt,
       meta: {
         requiresAuth: true,
       },
